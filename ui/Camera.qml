@@ -77,6 +77,7 @@ Mycroft.Delegate {
 
             imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
             captureMode: Camera.CaptureStillImage
+            viewfinder.resolution: "640x480"
             exposure {
                 exposureCompensation: 1.0
                 exposureMode: Camera.ExposurePortrait
