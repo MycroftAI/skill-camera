@@ -4,40 +4,44 @@ from mycroft.messagebus.message import Message
 from mycroft import MycroftSkill, intent_handler
 from mycroft.util.log import LOG
 
+
 class CameraSkill(MycroftSkill):
     """
-        Camera Skill Class
+    Camera Skill Class
     """
+
     def __init__(self):
         super(CameraSkill, self).__init__("CameraSkill")
         self.camera_mode = None
-        self.save_folder = os.path.expanduser('~/Pictures')
+        self.save_folder = os.path.expanduser("~/Pictures")
         if not os.path.isdir(self.save_folder):
             os.makedirs(self.save_folder)
 
     def initialize(self):
         # Register Camera GUI Events
-        self.gui.register_handler("CameraSkill.ViewPortStatus", 
-                                  self.handle_camera_status)
-        self.gui.register_handler("CameraSkill.EndProcess", 
-                                  self.handle_camera_completed)
-    
+        self.gui.register_handler(
+            "CameraSkill.ViewPortStatus", self.handle_camera_status
+        )
+        self.gui.register_handler(
+            "CameraSkill.EndProcess", self.handle_camera_completed
+        )
+
     @intent_handler("CaptureSingleShot.intent")
     def handle_capture_single_shot(self, message):
-        self.speak_dialog('ack')
+        self.speak_dialog("ack")
         self.gui["singleshot_mode"] = False
         self.handle_camera_activity("singleshot")
-    
+
     @intent_handler("OpenCamera.intent")
     def handle_open_camera(self, message):
-        self.speak_dialog('ack')
+        self.speak_dialog("ack")
         self.gui["singleshot_mode"] = False
         self.handle_camera_activity("generic")
-        
+
     def handle_camera_completed(self, message):
         self.gui.remove_page("Camera.qml")
         self.gui.release()
-    
+
     def handle_camera_status(self, message):
         current_status = message.data.get("status")
         if current_status == "generic":
@@ -58,9 +62,6 @@ class CameraSkill(MycroftSkill):
     def stop(self):
         self.handle_camera_completed({})
 
+
 def create_skill():
     return CameraSkill()
-    
-    
-
-    
