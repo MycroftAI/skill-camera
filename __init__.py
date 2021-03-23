@@ -1,6 +1,5 @@
 import os
 from mycroft import MycroftSkill, intent_handler
-from mycroft.util.log import LOG
 
 
 class CameraSkill(MycroftSkill):
