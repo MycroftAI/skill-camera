@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from mycroft import MycroftSkill, intent_handler
+from mycroft import MycroftSkill, intent_handler, skill_api_method
 
 
 class CameraSkill(MycroftSkill):
@@ -43,7 +43,7 @@ class CameraSkill(MycroftSkill):
         """Take a picture."""
         self.speak_dialog("acknowledge")
         self.gui["singleshot_mode"] = False
-        self.handle_camera_activity("singleshot")
+        self.take_single_photo()
 
     @intent_handler("OpenCamera.intent")
     def handle_open_camera(self, _):
@@ -71,8 +71,24 @@ class CameraSkill(MycroftSkill):
         if current_status == "singleshot":
             self.gui["singleshot_mode"] = True
 
+    @skill_api_method
+    def take_single_photo(self):
+        """Take a single photo using the attached camera."""
+        self.handle_camera_activity("singleshot")
+
+    @skill_api_method
+    def open_camera_app(self):
+        """Open the camera live view mode."""
+        self.handle_camera_activity("generic")
+
     def handle_camera_activity(self, activity):
-        """Perform camera action."""
+        """Perform camera action.
+        
+        Arguments:
+            activity (str): the type of action to take, one of:
+                "generic" - open the camera app
+                "singleshot" - take a single photo
+        """
         self.gui["save_path"] = self.save_folder
         if activity == "singleshot":
             self.gui["singleshot_mode"] = True
