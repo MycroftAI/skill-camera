@@ -26,17 +26,17 @@ class CameraSkill(MycroftSkill):
 
     @intent_handler("CaptureSingleShot.intent")
     def handle_capture_single_shot(self, _):
-        self.speak_dialog("ack")
+        self.speak_dialog("acknowledge")
         self.gui["singleshot_mode"] = False
         self.handle_camera_activity("singleshot")
 
     @intent_handler("OpenCamera.intent")
     def handle_open_camera(self, _):
-        self.speak_dialog("ack")
+        self.speak_dialog("acknowledge")
         self.gui["singleshot_mode"] = False
         self.handle_camera_activity("generic")
 
-    def handle_camera_completed(self, _):
+    def handle_camera_completed(self, _=None):
         self.gui.remove_page("Camera.qml")
         self.gui.release()
 
@@ -58,7 +58,7 @@ class CameraSkill(MycroftSkill):
         self.gui.show_page("Camera.qml", override_idle=60)
 
     def stop(self):
-        self.handle_camera_completed({})
+        self.handle_camera_completed()
 
 
 def create_skill():
