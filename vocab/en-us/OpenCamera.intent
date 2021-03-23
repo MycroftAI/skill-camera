@@ -1,6 +1,1 @@
-open the camera
-open the camera app
-open the camera skill
-show the camera
-show the camera app
-show the camera skill
+(open|show) (the|) camera (app|skill|)
