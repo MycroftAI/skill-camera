@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from mycroft import MycroftSkill, intent_handler, skill_api_method
+from mycroft.skills import MycroftSkill, intent_handler, skill_api_method
 
 
 class CameraSkill(MycroftSkill):
