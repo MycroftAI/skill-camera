@@ -1,6 +1,4 @@
 import os
-from adapt.intent import IntentBuilder
-from mycroft.messagebus.message import Message
 from mycroft import MycroftSkill, intent_handler
 from mycroft.util.log import LOG
 
