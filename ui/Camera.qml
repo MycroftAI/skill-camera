@@ -36,6 +36,8 @@ Mycroft.Delegate {
     controlBar: Local.ControlBar {
         id: cameraControls
         cameraControl: camera
+        viewArea: viewOutputArea
+        savePath: sessionData.save_path
         anchors.bottom: parent.bottom
     }
 
@@ -50,7 +52,15 @@ Mycroft.Delegate {
                 imageProcess = false;
                 root.seconds = root.defaultSeconds
                 cameraShootSound.play()
-                camera.imageCapture.captureToLocation(savePath);
+
+                // Workaround Gstreamer & 4.19 kernel V4l2 module failing to capture image
+                // Use After Fix: camera.imageCapture.captureToLocation(savePath);
+                camera.imageCapture.capture() // Emit only for signal activation
+                var filepath = savePath + "/image-" +  Qt.formatDateTime(new Date(), "hhmmss-ddMMyy") + ".png"
+                viewOutputArea.grabToImage(function(result) {
+                    result.saveToFile(filepath);
+                });
+
                 shootFeedback.start()
             }
         }
@@ -77,7 +87,7 @@ Mycroft.Delegate {
 
             imageProcessing.whiteBalanceMode: CameraImageProcessing.WhiteBalanceFlash
             captureMode: Camera.CaptureStillImage
-            viewfinder.resolution: "640x480"
+            viewfinder.resolution: "1280x720"
             exposure {
                 exposureCompensation: 1.0
                 exposureMode: Camera.ExposurePortrait
@@ -110,6 +120,7 @@ Mycroft.Delegate {
         }
 
         VideoOutput {
+            id: viewOutputArea
             source: camera
             anchors.fill: parent
             focus : visible

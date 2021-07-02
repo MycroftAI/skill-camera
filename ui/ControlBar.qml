@@ -11,6 +11,8 @@ Item {
     property bool opened: false
     property bool enabled: true
     property var cameraControl
+    property var viewArea
+    property var savePath
 
     clip: true
     implicitWidth: parent.width
@@ -68,7 +70,13 @@ Item {
                 z: 1000
                 onClicked: {
                     cameraShootSound.play()
-                    cameraControl.imageCapture.captureToLocation(savePath);
+                    // Workaround Gstreamer & 4.19 kernel V4l2 module failing to capture image
+                    // Use After Fix: camera.imageCapture.captureToLocation(savePath);
+                    cameraControl.imageCapture.capture() // Emit only for signal activation
+                    var filepath = savePath + "/image-" +  Qt.formatDateTime(new Date(), "hhmmss-ddMMyy") + ".png"
+                    viewArea.grabToImage(function(result) {
+                        result.saveToFile(filepath);
+                    });
                     shootFeedback.start()
                 }
                 onFocusChanged: {
